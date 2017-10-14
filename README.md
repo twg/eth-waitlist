@@ -8,11 +8,11 @@ This project uses [Truffle](http://truffleframework.com/)
 # Dependencies
 
 ### npm v5.0+
-### truffle (v 3.0.5+)
+### truffle (v 4.0.0 beta)
 ### ethereumjs-testrpc
 
 ```
-npm install -g truffle // required.
+npm install -g truffle@beta // required.
 npm install -g ethereumjs-testrpc
 ```
 
@@ -48,8 +48,8 @@ npm run build
 # Testing
 
 ```
-// Runs Jest for component tests.
-npm run test
+// Start the testrpc first
+testrpc
 
 // Runs Truffle's test suite for smart contract tests.
 truffle test
