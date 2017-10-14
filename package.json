@@ -49,18 +49,18 @@
         "whatwg-fetch": "1.0.0"
     },
     "dependencies": {
-        "dotenv": "^2.0.0",
-        "geth": "^0.4.0",
-        "lodash": "^4.17.4",
-        "react": "^15.4.2",
-        "react-dom": "^15.4.2",
-        "web3": "^1.0.0-beta.23",
         "ethereumjs-testrpc": "^4.1.3",
         "express": "^4.16.2",
-        "solc": "^0.4.17"
+        "geth": "^0.4.0",
+        "lodash": "^4.17.4",
+        "nodemon": "^1.12.1",
+        "react": "^15.4.2",
+        "react-dom": "^15.4.2",
+        "solc": "^0.4.17",
+        "web3": "^1.0.0-beta.23"
     },
     "scripts": {
-        "api": "node api/server.js",
+        "api": "nodemon -L api/server.js",
         "start": "node scripts/start.js",
         "build": "node scripts/build.js",
         "test": "node scripts/test.js --env=jsdom"
