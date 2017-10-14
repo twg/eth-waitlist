@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 import getWeb3 from './utils/getWeb3'
 import _ from 'lodash'
-import Admin from './Admin'
+// import Admin from './Admin'
 import List from './List'
 import Metadata from './Metadata'
 import Accounts from './Accounts'
@@ -21,18 +21,13 @@ class App extends Component {
     super(props)
 
     this.state = {
-      storageValue: '',
-      web3: null,
-      waitlistInstance: null,
-      currentPosition: null,
-      waitingList: [],
-      owner: null
+      web3: null
     }
 
-    this.getCurrentList = this.getCurrentList.bind(this)
-    this.getCurrentPosition = this.getCurrentPosition.bind(this)
-    this.addMeToList = this.addMeToList.bind(this)
-    this.getContractOwner = this.getContractOwner.bind(this)
+    // this.getCurrentList = this.getCurrentList.bind(this)
+    // this.getCurrentPosition = this.getCurrentPosition.bind(this)
+    // this.addMeToList = this.addMeToList.bind(this)
+    // this.getContractOwner = this.getContractOwner.bind(this)
   }
 
   componentWillMount() {
@@ -61,72 +56,65 @@ class App extends Component {
   //   })
   // }
 
-  getContractOwner(instance) {
-    instance.owner().then(owner => {
-      this.setState(prevState => ({ ...prevState, owner }))
-    })
-  }
+  // getContractOwner(instance) {
+  //   instance.owner().then(owner => {
+  //     this.setState(prevState => ({ ...prevState, owner }))
+  //   })
+  // }
 
-  getCurrentList() {
-    this.state.waitlistInstance.getWaitingList().then(list => {
-      this.setState(prevState => ({ ...prevState, waitingList: list }))
-    })
-  }
+  // getCurrentList() {
+  //   this.state.waitlistInstance.getWaitingList().then(list => {
+  //     this.setState(prevState => ({ ...prevState, waitingList: list }))
+  //   })
+  // }
 
-  getCurrentPosition() {
-    this.state.waitlistInstance.getCurrent().then(position => {
-      console.log('position: ' + position)
-      this.setState(prevState => ({ ...prevState, currentPosition: position }))
-    })
-  }
+  // getCurrentPosition() {
+  //   this.state.waitlistInstance.getCurrent().then(position => {
+  //     console.log('position: ' + position)
+  //     this.setState(prevState => ({ ...prevState, currentPosition: position }))
+  //   })
+  // }
 
-  addMeToList() {
-    this.state.waitlistInstance
-      .addToWaitingList({ from: this.state.web3.eth.accounts[0] })
-      .then(res => {
-        console.log(res)
-      })
-  }
+  // addMeToList() {
+  //   this.state.waitlistInstance
+  //     .addToWaitingList({ from: this.state.web3.eth.accounts[0] })
+  //     .then(res => {
+  //       console.log(res)
+  //     })
+  // }
 
-  isCurrentUserContractOwner() {
-    return this.state.userAccounts.find(address => address === this.state.owner)
-  }
+  // isCurrentUserContractOwner() {
+  //   return this.state.userAccounts.find(address => address === this.state.owner)
+  // }
 
-  renderAccounts() {
-    return this.context.web3.accounts.map(account => {
-      return (
-        <li key={account}>
-          {this.context.web3.selectedAccount === account ? (
-            <strong style={{ fontSize: '24px' }}>{account}</strong>
-          ) : (
-            account
-          )}
-        </li>
-      )
-    })
-  }
+  // renderAccounts() {
+  //   return this.context.web3.accounts.map(account => {
+  //     return (
+  //       <li key={account}>
+  //         {this.context.web3.selectedAccount === account ? (
+  //           <strong style={{ fontSize: '24px' }}>{account}</strong>
+  //         ) : (
+  //           account
+  //         )}
+  //       </li>
+  //     )
+  //   })
+  // }
 
   render() {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-          <a href="#" className="pure-menu-heading pure-menu-link">
-            Waitlist App
+          <a href="/">
+            <span className="pure-menu-heading pure-menu-link">
+              Waitlist App
+            </span>
           </a>
         </nav>
         <main className="container">
           <BrowserRouter>
             <Switch>
-              <Route
-                exact
-                path="/admin"
-                render={() => <Admin {...this.state} />}
-              />
-              <Route
-                exact
-                path="/lists"
-                render={() => <Lists {...this.state} />}
-              />
+              <Route exact path="/" render={() => <Lists {...this.state} />} />
               <Route
                 exact
                 path="/lists/new"

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { get } from './utils/api'
 
 const LISTS = [
   {
@@ -19,12 +20,16 @@ class Lists extends React.Component {
   }
 
   async componentDidMount() {
-    const lists = await LISTS
+    let lists
+    try {
+      lists = await get(`/lists?account=${this.context.web3.selectedAccount}`)
+    } catch (err) {
+      lists = LISTS
+    }
     this.setState({ lists })
   }
 
   render() {
-    console.log(this.state.lists)
     return (
       <div className="flexcontainer" style={{ margin: '50px 0' }}>
         {this.state.lists.map(list => {
