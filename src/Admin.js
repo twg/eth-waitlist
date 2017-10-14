@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import _ from 'lodash'
 const contract = require("truffle-contract")
@@ -34,7 +35,7 @@ class Admin extends Component {
     })
     this.Waitlist.setProvider(this.props.web3.currentProvider)
     this.Waitlist.new({
-      from: this.props.currentAccount,
+      from: this.context.web3.selectedAccount,
       gas: 500000,
       gasPrice: 1000000000, // 1 wei
     }).then(instance => {
@@ -102,6 +103,10 @@ class Admin extends Component {
     )
   }
 }
+
+Admin.contextTypes = {
+  web3: PropTypes.object
+};
 
 export default Admin
 

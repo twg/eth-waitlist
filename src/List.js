@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 const contract = require("truffle-contract")
 import WaitlistContract from '../build/contracts/Waitlist.json'
+import PropTypes from 'prop-types'
 
 class List extends Component {
   state = {
@@ -47,14 +48,14 @@ class List extends Component {
   addMeToList = () => {
     this.getInstance()
       .then(instance => {
-        instance.addToWaitingList({ from: this.props.currentAccount }).then(res => {
+        instance.addToWaitingList({ from: this.context.web3.selectedAccount }).then(res => {
           this.refreshList()
         })
       })
   }
 
   userPosition = () => {
-    const userIndex = this.state.list.findIndex(address => address === this.props.currentAccount)
+    const userIndex = this.state.list.findIndex(address => address === this.context.web3.selectedAccount)
     if (userIndex !== -1) {
       return userIndex - this.state.current
     }
@@ -83,5 +84,9 @@ class List extends Component {
     )
   }
 }
+
+List.contextTypes = {
+  web3: PropTypes.object
+};
 
 export default List
