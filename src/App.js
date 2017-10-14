@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import WaitlistContract from '../build/contracts/Waitlist.json'
 import getWeb3 from './utils/getWeb3'
+import networkIdMap from './utils/networkIdMap'
 import _ from 'lodash'
 
 import './css/oswald.css'
@@ -15,19 +16,18 @@ class App extends Component {
     this.state = {
       storageValue: '',
       web3: null,
-      waitingList: [
-        '0x00000001',
-        '0x00000002',
-        '0x00000003',
-        '0x00000004',
-      ],
+      network: null,
       waitlistInstance: null,
-      currentPosition: null
+      currentPosition: null,
+      waitingList: [],
+      userAccounts: [],
+      owner: null
     }
 
     this.getCurrentList = this.getCurrentList.bind(this)
     this.getCurrentPosition = this.getCurrentPosition.bind(this)
     this.addMeToList = this.addMeToList.bind(this)
+    this.getContractOwner = this.getContractOwner.bind(this)
   }
 
   componentWillMount () {
@@ -36,40 +36,47 @@ class App extends Component {
 
     getWeb3
       .then(results => {
-        this.setState({
-          web3: results.web3
-        })
-
+        const web3 = results.web3
+        this.setState(prevState => ({ ...prevState, web3 }), this.getNetworkId)
+      })
+      .then(() => {
         // Instantiate contract once web3 provided.
         this.instantiateContract()
+        this.getAccounts()
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err)
         console.log('Error finding web3.')
       })
   }
   instantiateContract () {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
-
     const contract = require('truffle-contract')
     const waitlist = contract(WaitlistContract)
     waitlist.setProvider(this.state.web3.currentProvider)
 
+    // get waitlist instance
+    waitlist.deployed().then((instance) => {
+      this.setState(prevState => ({...prevState, waitlistInstance: instance}))
+      this.getContractOwner(instance)
+    })
+  }
+
+  getAccounts () {
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
-      waitlist.deployed().then((instance) => {
-        this.setState(prevState => ({...prevState, waitlistInstance: instance}))
-      })
+      this.setState(prevState => ({...prevState, userAccounts: accounts}))
+    })
+  }
+
+  getContractOwner (instance) {
+    instance.owner().then(owner => {
+      this.setState(prevState => ({...prevState, owner }))
     })
   }
 
   getNetworkId () {
-    return this.state.web3.version.getNetwork((err, netId) => {
-      return <p>{netId}</p>
+    this.state.web3.version.getNetwork((err, netId) => {
+      this.setState(prevState => ({ ...prevState, network: netId }))
     })
   }
 
@@ -87,34 +94,56 @@ class App extends Component {
   }
 
   addMeToList () {
-    // console.log(this.state.web3.eth.accounts)
     this.state.waitlistInstance.addToWaitingList({ from: this.state.web3.eth.accounts[0] }).then(res => {
       console.log(res)
     })
+  }
+
+  isCurrentUserContractOwner () {
+    return this.state.userAccounts.find(address => address === this.state.owner)
   }
 
   render() {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-          <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
+          <a href="#" className="pure-menu-heading pure-menu-link">Waitlist App</a>
         </nav>
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <h2>Waiting List</h2>
-              <ul>
-                {_.map(this.state.waitingList, (waitingList) => {
-                  return <li>{waitingList}</li>
-                })}
-              </ul>
-              <h2>Current Position</h2>
-              <div>{JSON.stringify(this.state.currentPosition)}</div>
-              {this.state.web3 ? this.getNetworkId() : 'Loading'}
-              {this.state.waitlistInstance ? 'Got instance' : 'No instance'}
-              <button onClick={this.addMeToList}>Add me to list</button>
-              <button onClick={this.getCurrentList}>Get current list</button>
-              <button onClick={this.getCurrentPosition}>Update current position</button>
+
+              <div className='metadata'>
+                <h2>Metadata</h2>
+                <p>Network: {this.state.web3 ? networkIdMap[this.state.network] : 'Loading...'}</p>
+                <p>Main contract address: {this.state.waitlistInstance ? this.state.waitlistInstance.address : 'Loading...'}</p>
+              </div>
+
+              <div className='user'>
+                <h2>Current User</h2>
+                <p>Accounts:</p>
+                <ul>
+                  { this.state.userAccounts.map(account => <li key={account}>{account}</li>) }
+                </ul>
+                <p>Current User is {this.isCurrentUserContractOwner() ? '' : 'NOT'} contract owner</p>
+
+              </div>
+
+              <div className='waitlist'>
+                <h2>Waiting List</h2>
+                {
+                  this.state.waitingList.length === 0 ? 'Empty!' :
+                  <ul>
+                  {_.map(this.state.waitingList, (waitingList, index) => {
+                    return <li key={index}>{waitingList}</li>
+                  })}
+                  </ul>
+                }
+                <h2>Current Position: {JSON.stringify(this.state.currentPosition)}</h2>
+                <div><button onClick={this.addMeToList}>Add me to list</button></div>
+                <div><button onClick={this.getCurrentList}>Get current list</button></div>
+                <div><button onClick={this.getCurrentPosition}>Update current position</button></div>
+              </div>
             </div>
           </div>
         </main>

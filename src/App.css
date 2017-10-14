@@ -66,3 +66,24 @@ code {
   height: 16px;
   margin-right: 10px;
 }
+
+.metadata {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: lightgrey;
+  border: solid 1px black;
+}
+
+.user {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: tomato;
+  border: solid 1px black;
+}
+
+.waitlist {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: lightblue;
+  border: solid 1px black;
+}
