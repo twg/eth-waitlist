@@ -13,7 +13,3 @@ module.exports = {
       .catch(next)
   }
 }
-
-
-
-

@@ -9,7 +9,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
-const routes = require('./waitlist/routes/waitlistRoutes') //importing route
+const routes = require('./waitlist/routes/applicationRoute') //importing route
 routes(app)
 
 app.listen(port)
