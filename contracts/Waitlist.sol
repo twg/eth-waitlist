@@ -29,7 +29,7 @@ contract Waitlist {
   }
 
   function pop() onlyOwner returns(address) {
-    require(waitingList.length < current);
+    require(waitingList.length > current);
     address user = waitingList[current];
     current++;
     return user;
