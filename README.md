@@ -54,3 +54,10 @@ testrpc
 // Runs Truffle's test suite for smart contract tests.
 truffle test
 ```
+
+
+# API
+
+```
+./node_modules/.bin/nodemon api/server.js
+```
