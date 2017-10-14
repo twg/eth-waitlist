@@ -3,7 +3,7 @@ const Waitlist = db.waitlist
 
 module.exports = {
   getList: function (req, res, next) {
-    Waitlist.findAll()
+    Waitlist.findAll({where: {ownerPublicKey: req.params.ownerPublicKey}})
       .then((rows) => res.json(rows))
       .catch(next)
   },
