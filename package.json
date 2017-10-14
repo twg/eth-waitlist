@@ -54,7 +54,10 @@
         "lodash": "^4.17.4",
         "react": "^15.4.2",
         "react-dom": "^15.4.2",
-        "web3": "^1.0.0-beta.23"
+        "web3": "^1.0.0-beta.23",
+        "ethereumjs-testrpc": "^4.1.3",
+        "express": "^4.16.2",
+        "solc": "^0.4.17"
     },
     "scripts": {
         "start": "node scripts/start.js",

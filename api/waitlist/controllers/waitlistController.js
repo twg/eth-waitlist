@@ -2,8 +2,6 @@
 const web3 = require('./../web3')
 
 exports.get_waitlist = function(req, res) {    
-    web3.eth.getBalance('0x5608c3bb2bcd38dec056f6a9dcf1b1fc98fab17c')
-    .then((data) => {
-        res.send({status: data })    
-    })
+  web3.eth.getBalance('0x825ed100c69a630770df703a53d14f20b6523edb')
+  .then((data) => { res.json({status: data.toString()}) })
 };
