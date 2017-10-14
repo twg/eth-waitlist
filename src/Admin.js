@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import _ from 'lodash'
 const contract = require("truffle-contract")
 import WaitlistContract from '../build/contracts/Waitlist.json'
@@ -92,10 +93,10 @@ class Admin extends Component {
         <div className='waitlist'>
           <h2>All Lists Belonging to Current User</h2>
           <ul>
-            { this.state.instances && this.state.instances.map((instance, index) => <li key={index} onClick={() => this.getInstance(instance.address)}>{instance.address}</li>)}
+            { this.state.instances && this.state.instances.map((instance, index) => <li key={index}><span onClick={() => this.getInstance(instance.address)}>{instance.address}</span> <Link to={`/list/${instance.address}`}>Go to list</Link></li>)}
           </ul>
-          {this.state.currentInstance && this.renderListInfo()}
           <button onClick={this.deploy}>Deploy new list</button>
+          {this.state.currentInstance && this.renderListInfo()}
         </div>
       </div>
     )

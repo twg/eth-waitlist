@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
+// import { Web3Provider } from 'react-web3';
+
+
 // import WaitlistContract from '../build/contracts/Waitlist.json'
 import getWeb3 from './utils/getWeb3'
 import networkIdMap from './utils/networkIdMap'
