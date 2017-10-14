@@ -5,6 +5,10 @@ import getWeb3 from './utils/getWeb3'
 import _ from 'lodash'
 import Admin from './Admin'
 import List from './List'
+import Metadata from './Metadata'
+import Accounts from './Accounts'
+import Lists from './Lists'
+import CreateList from './CreateList'
 // import User from './User'
 
 import './css/oswald.css'
@@ -13,7 +17,7 @@ import './css/pure-min.css'
 import './App.css'
 
 class App extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -31,7 +35,7 @@ class App extends Component {
     this.getContractOwner = this.getContractOwner.bind(this)
   }
 
-  componentWillMount () {
+  componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
 
@@ -40,7 +44,7 @@ class App extends Component {
         const web3 = results.web3
         this.setState(prevState => ({ ...prevState, web3 }))
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err)
         console.log('Error finding web3.')
       })
@@ -57,40 +61,46 @@ class App extends Component {
   //   })
   // }
 
-  getContractOwner (instance) {
+  getContractOwner(instance) {
     instance.owner().then(owner => {
-      this.setState(prevState => ({...prevState, owner }))
+      this.setState(prevState => ({ ...prevState, owner }))
     })
   }
 
-  getCurrentList () {
+  getCurrentList() {
     this.state.waitlistInstance.getWaitingList().then(list => {
-      this.setState(prevState => ({...prevState, waitingList: list}))
+      this.setState(prevState => ({ ...prevState, waitingList: list }))
     })
   }
 
-  getCurrentPosition () {
+  getCurrentPosition() {
     this.state.waitlistInstance.getCurrent().then(position => {
       console.log('position: ' + position)
-      this.setState(prevState => ({...prevState, currentPosition: position}))
+      this.setState(prevState => ({ ...prevState, currentPosition: position }))
     })
   }
 
-  addMeToList () {
-    this.state.waitlistInstance.addToWaitingList({ from: this.state.web3.eth.accounts[0] }).then(res => {
-      console.log(res)
-    })
+  addMeToList() {
+    this.state.waitlistInstance
+      .addToWaitingList({ from: this.state.web3.eth.accounts[0] })
+      .then(res => {
+        console.log(res)
+      })
   }
 
-  isCurrentUserContractOwner () {
+  isCurrentUserContractOwner() {
     return this.state.userAccounts.find(address => address === this.state.owner)
   }
 
-  renderAccounts () {
+  renderAccounts() {
     return this.context.web3.accounts.map(account => {
       return (
         <li key={account}>
-          {this.context.web3.selectedAccount === account ? <strong style={{fontSize: '24px'}}>{account}</strong> : account}
+          {this.context.web3.selectedAccount === account ? (
+            <strong style={{ fontSize: '24px' }}>{account}</strong>
+          ) : (
+            account
+          )}
         </li>
       )
     })
@@ -100,31 +110,37 @@ class App extends Component {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-          <a href="#" className="pure-menu-heading pure-menu-link">Waitlist App</a>
+          <a href="#" className="pure-menu-heading pure-menu-link">
+            Waitlist App
+          </a>
         </nav>
         <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <div className='metadata'>
-                <h2>Metadata</h2>
-                <p>Network: {this.context.web3.network} ({this.context.web3.networkId})</p>
-                <p>Main contract address: {this.state.waitlistInstance ? this.state.waitlistInstance.address : 'Loading...'}</p>
-              </div>
-            </div>
-          </div>
-          <div className='user'>
-            <h2>Current User</h2>
-            <p>Accounts:</p>
-            <ul>
-              { this.renderAccounts() }
-            </ul>
-          </div>
           <BrowserRouter>
             <Switch>
-              <Route exact path="/admin" render={() => <Admin {...this.state} />} />
-              <Route exact path="/list/:id" render={props => <List {...props} {...this.state} />} />
+              <Route
+                exact
+                path="/admin"
+                render={() => <Admin {...this.state} />}
+              />
+              <Route
+                exact
+                path="/lists"
+                render={() => <Lists {...this.state} />}
+              />
+              <Route
+                exact
+                path="/lists/new"
+                render={() => <CreateList {...this.state} />}
+              />
+              <Route
+                exact
+                path="/list/:id"
+                render={props => <List {...props} {...this.state} />}
+              />
             </Switch>
           </BrowserRouter>
+          <Metadata />
+          <Accounts />
         </main>
       </div>
     )
@@ -133,6 +149,6 @@ class App extends Component {
 
 App.contextTypes = {
   web3: PropTypes.object
-};
+}
 
 export default App
