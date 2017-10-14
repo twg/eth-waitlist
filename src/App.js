@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
-import WaitlistContract from '../build/contracts/Waitlist.json'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+// import WaitlistContract from '../build/contracts/Waitlist.json'
 import getWeb3 from './utils/getWeb3'
 import networkIdMap from './utils/networkIdMap'
 import _ from 'lodash'
+import Admin from './Admin'
+import List from './List'
+// import User from './User'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -21,7 +25,8 @@ class App extends Component {
       currentPosition: null,
       waitingList: [],
       userAccounts: [],
-      owner: null
+      owner: null,
+      currentAccount: null
     }
 
     this.getCurrentList = this.getCurrentList.bind(this)
@@ -41,7 +46,7 @@ class App extends Component {
       })
       .then(() => {
         // Instantiate contract once web3 provided.
-        this.instantiateContract()
+        // this.instantiateContract()
         this.getAccounts()
       })
       .catch((err) => {
@@ -49,22 +54,22 @@ class App extends Component {
         console.log('Error finding web3.')
       })
   }
-  instantiateContract () {
-    const contract = require('truffle-contract')
-    const waitlist = contract(WaitlistContract)
-    waitlist.setProvider(this.state.web3.currentProvider)
+  // instantiateContract () {
+  //   const contract = require('truffle-contract')
+  //   const waitlist = contract(WaitlistContract)
+  //   waitlist.setProvider(this.state.web3.currentProvider)
 
-    // get waitlist instance
-    waitlist.deployed().then((instance) => {
-      this.setState(prevState => ({...prevState, waitlistInstance: instance}))
-      this.getContractOwner(instance)
-    })
-  }
+  //   // get waitlist instance
+  //   waitlist.deployed().then((instance) => {
+  //     this.setState(prevState => ({...prevState, waitlistInstance: instance}))
+  //     this.getContractOwner(instance)
+  //   })
+  // }
 
   getAccounts () {
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
-      this.setState(prevState => ({...prevState, userAccounts: accounts}))
+      this.setState(prevState => ({...prevState, userAccounts: accounts, currentAccount: accounts[0]}))
     })
   }
 
@@ -103,6 +108,20 @@ class App extends Component {
     return this.state.userAccounts.find(address => address === this.state.owner)
   }
 
+  setCurrentAccount (account) {
+    this.setState(prevState => ({...prevState, currentAccount: account}))
+  }
+
+  renderAccounts () {
+    return this.state.userAccounts.map(account => {
+      return (
+        <li key={account} onClick={() => this.setCurrentAccount(account)}>
+          {this.state.currentAccount === account ? <strong style={{fontSize: '24px'}}>{account}</strong> : account}
+        </li>
+      )
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -115,37 +134,24 @@ class App extends Component {
 
               <div className='metadata'>
                 <h2>Metadata</h2>
-                <p>Network: {this.state.web3 ? networkIdMap[this.state.network] : 'Loading...'}</p>
+                <p>Network: {this.state.web3 ? networkIdMap[this.state.network] || `${this.state.network} (testrpc?)` : 'Loading...'}</p>
                 <p>Main contract address: {this.state.waitlistInstance ? this.state.waitlistInstance.address : 'Loading...'}</p>
-              </div>
-
-              <div className='user'>
-                <h2>Current User</h2>
-                <p>Accounts:</p>
-                <ul>
-                  { this.state.userAccounts.map(account => <li key={account}>{account}</li>) }
-                </ul>
-                <p>Current User is {this.isCurrentUserContractOwner() ? '' : 'NOT'} contract owner</p>
-
-              </div>
-
-              <div className='waitlist'>
-                <h2>Waiting List</h2>
-                {
-                  this.state.waitingList.length === 0 ? 'Empty!' :
-                  <ul>
-                  {_.map(this.state.waitingList, (waitingList, index) => {
-                    return <li key={index}>{waitingList}</li>
-                  })}
-                  </ul>
-                }
-                <h2>Current Position: {JSON.stringify(this.state.currentPosition)}</h2>
-                <div><button onClick={this.addMeToList}>Add me to list</button></div>
-                <div><button onClick={this.getCurrentList}>Get current list</button></div>
-                <div><button onClick={this.getCurrentPosition}>Update current position</button></div>
               </div>
             </div>
           </div>
+          <div className='user'>
+            <h2>Current User</h2>
+            <p>Accounts:</p>
+            <ul>
+              { this.renderAccounts() }
+            </ul>
+          </div>
+          <BrowserRouter>
+            <Switch>
+              <Route exact path="/admin" render={() => <Admin {...this.state} />} />
+              <Route exact path="/list/:id" render={props => <List {...props} {...this.state} />} />
+            </Switch>
+          </BrowserRouter>
         </main>
       </div>
     )
