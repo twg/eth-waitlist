@@ -2,12 +2,10 @@ pragma solidity ^0.4.2;
 
 contract Waitlist {
   address[] public waitingList;
-  bytes32 listName;
   address public owner;
   uint current;
 
-  function Waitlist(bytes32 waitlistName) public {
-    listName = waitlistName;
+  function Waitlist() public {
     owner = msg.sender;
     current = 0;
   }
