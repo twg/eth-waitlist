@@ -36,7 +36,7 @@ class CreateList extends React.Component {
         post('/lists', {
           contractAddress: instance.address,
           name: this.state.name,
-          user: this.context.web3.selectedAccount
+          ownerPublicKey: this.context.web3.selectedAccount
         })
           .then(() => {
             window.location = '/lists'

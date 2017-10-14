@@ -122,7 +122,7 @@ class App extends Component {
               />
               <Route
                 exact
-                path="/list/:id"
+                path="/lists/:id"
                 render={props => <List {...props} {...this.state} />}
               />
             </Switch>
