@@ -60,6 +60,7 @@
         "solc": "^0.4.17"
     },
     "scripts": {
+        "api": "node api/server.js",
         "start": "node scripts/start.js",
         "build": "node scripts/build.js",
         "test": "node scripts/test.js --env=jsdom"
