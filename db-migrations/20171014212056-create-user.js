@@ -11,6 +11,9 @@ module.exports = {
       data: {
         type: Sequelize.JSON
       },
+      contractAddress: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
