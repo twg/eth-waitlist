@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-// import { Web3Provider } from 'react-web3';
-
-
-// import WaitlistContract from '../build/contracts/Waitlist.json'
 import getWeb3 from './utils/getWeb3'
-import networkIdMap from './utils/networkIdMap'
 import _ from 'lodash'
 import Admin from './Admin'
 import List from './List'
@@ -23,13 +19,10 @@ class App extends Component {
     this.state = {
       storageValue: '',
       web3: null,
-      network: null,
       waitlistInstance: null,
       currentPosition: null,
       waitingList: [],
-      userAccounts: [],
-      owner: null,
-      currentAccount: null
+      owner: null
     }
 
     this.getCurrentList = this.getCurrentList.bind(this)
@@ -45,12 +38,7 @@ class App extends Component {
     getWeb3
       .then(results => {
         const web3 = results.web3
-        this.setState(prevState => ({ ...prevState, web3 }), this.getNetworkId)
-      })
-      .then(() => {
-        // Instantiate contract once web3 provided.
-        // this.instantiateContract()
-        this.getAccounts()
+        this.setState(prevState => ({ ...prevState, web3 }))
       })
       .catch((err) => {
         console.error(err)
@@ -69,22 +57,9 @@ class App extends Component {
   //   })
   // }
 
-  getAccounts () {
-    // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      this.setState(prevState => ({...prevState, userAccounts: accounts, currentAccount: accounts[0]}))
-    })
-  }
-
   getContractOwner (instance) {
     instance.owner().then(owner => {
       this.setState(prevState => ({...prevState, owner }))
-    })
-  }
-
-  getNetworkId () {
-    this.state.web3.version.getNetwork((err, netId) => {
-      this.setState(prevState => ({ ...prevState, network: netId }))
     })
   }
 
@@ -111,15 +86,11 @@ class App extends Component {
     return this.state.userAccounts.find(address => address === this.state.owner)
   }
 
-  setCurrentAccount (account) {
-    this.setState(prevState => ({...prevState, currentAccount: account}))
-  }
-
   renderAccounts () {
-    return this.state.userAccounts.map(account => {
+    return this.context.web3.accounts.map(account => {
       return (
-        <li key={account} onClick={() => this.setCurrentAccount(account)}>
-          {this.state.currentAccount === account ? <strong style={{fontSize: '24px'}}>{account}</strong> : account}
+        <li key={account}>
+          {this.context.web3.selectedAccount === account ? <strong style={{fontSize: '24px'}}>{account}</strong> : account}
         </li>
       )
     })
@@ -134,10 +105,9 @@ class App extends Component {
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-
               <div className='metadata'>
                 <h2>Metadata</h2>
-                <p>Network: {this.state.web3 ? networkIdMap[this.state.network] || `${this.state.network} (testrpc?)` : 'Loading...'}</p>
+                <p>Network: {this.context.web3.network} ({this.context.web3.networkId})</p>
                 <p>Main contract address: {this.state.waitlistInstance ? this.state.waitlistInstance.address : 'Loading...'}</p>
               </div>
             </div>
@@ -160,5 +130,9 @@ class App extends Component {
     )
   }
 }
+
+App.contextTypes = {
+  web3: PropTypes.object
+};
 
 export default App
