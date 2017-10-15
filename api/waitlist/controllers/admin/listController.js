@@ -11,5 +11,10 @@ module.exports = {
     Waitlist.create(req.body)
       .then(row => res.json(row))
       .catch(next)
+  },
+  getListByContractAddress: function(req, res, next) {
+    Waitlist.findAll({ where: { contractAddress: req.params.id } })
+      .then(rows => res.json(rows[0]))
+      .catch(next)
   }
 }

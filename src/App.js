@@ -4,7 +4,6 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import getWeb3 from './utils/getWeb3'
 import _ from 'lodash'
 import List from './List'
-import Accounts from './Accounts'
 import Lists from './Lists'
 import CreateList from './CreateList'
 
@@ -45,9 +44,10 @@ class App extends Component {
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
           <a href="/">
-            <span className="pure-menu-heading pure-menu-link">
-              Waitlist App
-            </span>
+            <span className="pure-menu-heading pure-menu-link">Lists</span>
+          </a>
+          <a href="/about">
+            <span className="pure-menu-heading pure-menu-link">About</span>
           </a>
         </nav>
         <main className="container">
@@ -72,7 +72,6 @@ class App extends Component {
               </Switch>
             </BrowserRouter>
           )}
-          <Accounts {...this.state} />
         </main>
       </div>
     )
