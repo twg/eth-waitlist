@@ -6,10 +6,10 @@ import "../contracts/Waitlist.sol";
 
 contract TestWaitlist {
 
-  function testItCreatesAList() public {
+  // function testItCreatesAList() public {
     // Waitlist waitlist = Waitlist(DeployedAddresses.Waitlist());
 
     // Assert.equal(waitlist.get().length, 0, "It should return an empty list.");
-  }
+  // }
 
 }

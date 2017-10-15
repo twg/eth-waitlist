@@ -25,9 +25,11 @@ contract('Waitlist', function(accounts) {
                 return waitlist.get();
             }).then(function(list) {
                 assert.equal(list.length, 1, "The waitlist should have one account.");
+                return waitlist.pop();
+            }).then(function() {
                 return waitlist.getNextInQueue();
             }).then(function(nextInQueue) {
-                assert.equal(nextInQueue, 0, "Current spot should be zero.");
+                assert.equal(nextInQueue, 1, "Current spot should be zero.");
             });
         });
 
@@ -37,7 +39,7 @@ contract('Waitlist', function(accounts) {
 
         it('join a list', function() {
             return waitlist.join({ from: accounts[1] }).then(function() {
-                return waitlist.get();
+                return waitlist.get({ from: accounts[1] });
             }).then(function(list) {
                 assert.equal(list.length, 1, "The waitlist should have one account.");
                 return waitlist.getNextInQueue();
