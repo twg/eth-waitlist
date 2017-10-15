@@ -1,5 +1,7 @@
 # Eth Waitlist
 
+A simple, open source waitlist dApp. It’s designed to be used wherever resources are in short supply. By making resource distribution more transparent, we can help limit corruption and coercion, building a more egalitarian world for all.
+
 Repo for the ethereum waitlist project
 
 This project uses [Truffle](http://truffleframework.com/)
