@@ -19,7 +19,7 @@ class CreateList extends React.Component {
   deploy = () => {
     this.Waitlist = contract({
       abi: WaitlistContract.abi,
-      unlinked_binary: WaitlistContract.unlinked_binary
+      bytecode: WaitlistContract.bytecode
     })
     this.Waitlist.setProvider(this.props.web3.currentProvider)
     return this.Waitlist.new({
