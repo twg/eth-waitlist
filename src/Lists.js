@@ -1,18 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { get } from './utils/api'
-
-const LISTS = [
-  {
-    address: '0x1234892374',
-    name: 'List 1'
-  },
-  {
-    address: '0x1oiu23942',
-    name: 'List 2'
-  }
-]
 
 class Lists extends React.Component {
   state = {
