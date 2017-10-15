@@ -21,12 +21,16 @@ contract('Waitlist', function(accounts) {
         });
 
         it('pop a user from a list', function() {
-            return waitlist.join({ from: accounts[1] }).then(function() {
+            var joiningUser = accounts[1];
+
+            return waitlist.join({ from: joiningUser }).then(function() {
                 return waitlist.get();
             }).then(function(list) {
                 assert.equal(list.length, 1, "The waitlist should have one account.");
                 return waitlist.pop();
-            }).then(function() {
+            }).then(function({ logs }) {
+                assert.equal(logs[0].event, 'NextInQueue');
+                assert.equal(logs[0].args._value, joiningUser);
                 return waitlist.getNextInQueue();
             }).then(function(nextInQueue) {
                 assert.equal(nextInQueue, 1, "Current spot should be zero.");

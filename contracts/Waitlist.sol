@@ -5,7 +5,7 @@ contract Waitlist {
   address public owner;
   uint nextInQueue;
 
-  event ReturnValue(address indexed _from, address _value);
+  event NextInQueue(address indexed _from, address _value);
 
   function Waitlist() public {
     owner = msg.sender;
@@ -28,7 +28,7 @@ contract Waitlist {
     require(list.length > nextInQueue);
     address user = list[nextInQueue];
     nextInQueue++;
-    ReturnValue(msg.sender, user);
+    NextInQueue(msg.sender, user);
   }
 
   function getNextInQueue() constant public returns(uint) {
