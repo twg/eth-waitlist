@@ -6,6 +6,7 @@ import _ from 'lodash'
 import List from './List'
 import Lists from './Lists'
 import CreateList from './CreateList'
+import About from './About'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -59,6 +60,7 @@ class App extends Component {
                   path="/"
                   render={() => <Lists {...this.state} />}
                 />
+                <Route exact path="/About" render={() => <About />} />
                 <Route
                   exact
                   path="/lists/new"
