@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 const contract = require('truffle-contract')
 import WaitlistContract from '../build/contracts/Waitlist.json'
+import { get } from './utils/api'
 
 class List extends Component {
   state = {
@@ -34,13 +35,16 @@ class List extends Component {
   refreshList() {
     this.getInstance()
       .then(instance => {
-        console.log(instance)
         instance.get().then(list => {
           this.setState(prevState => ({ ...prevState, list }))
         })
 
         instance.getNextInQueue().then(current => {
           this.setState(prevState => ({ ...prevState, current }))
+        })
+
+        get(`/lists/byAddress/${instance.address}`).then(list => {
+          this.setState({ listInfo: list })
         })
       })
       .catch(error => {
@@ -92,6 +96,22 @@ class List extends Component {
     return this.userPosition() !== null
   }
 
+  numActive = () => {
+    return this.state.list.length - this.state.current
+  }
+
+  numInactive = () => {
+    return this.state.list.length - this.numActive()
+  }
+
+  numAhead = () => {
+    return this.userPosition() - this.state.current
+  }
+
+  numBehind = () => {
+    return this.numActive() - this.numAhead() - 1
+  }
+
   render() {
     if (this.state.error) {
       return 'error'
@@ -100,11 +120,48 @@ class List extends Component {
       <div className="waitlist">
         {this.Waitlist ? (
           <div>
-            <ul>{this.state.list.map((item, index) => <li>{item}</li>)}</ul>
-            <div>{this.renderUserPosition()}</div>
             {!this.userOnList() && (
-              <button onClick={this.addMeToList}>Add me to list</button>
+              <div style={{ float: 'right' }}>
+                <div className="circle" onClick={this.addMeToList}>
+                  +
+                </div>
+              </div>
             )}
+            <h1>{this.state.listInfo.name}</h1>
+            <p>
+              {this.numActive()} ACTIVE / {this.numInactive()} INACTIVE
+            </p>
+            {this.state.list.slice(this.state.current).map((item, index) => (
+              <div
+                key={index}
+                className={`list-row ${this.props.accounts[0].toLowerCase() ===
+                item.toLowerCase()
+                  ? 'highlight'
+                  : ''}`}
+              >
+                <span className="number">#{index + 1}</span> {item}{' '}
+                <span className="label">ACTIVE</span>
+              </div>
+            ))}
+            {this.state.list.slice(0, this.state.current).map((item, index) => (
+              <div
+                key={index}
+                className={`list-row ${this.props.accounts[0].toLowerCase() ===
+                item.toLowerCase()
+                  ? 'highlight'
+                  : ''}`}
+              >
+                <span className="number" /> {item}{' '}
+                <span className="label">INACTIVE</span>
+              </div>
+            ))}
+            {this.userOnList() ? (
+              <div className="msg">
+                <div className="congrats">You are on the list</div>
+                <div className="red-text">{this.numAhead()} ahead of you</div>
+                <div className="red-text">{this.numBehind()} behind you</div>
+              </div>
+            ) : null}
           </div>
         ) : (
           'Loading...'
@@ -115,3 +172,7 @@ class List extends Component {
 }
 
 export default List
+
+{
+  /* <div>{this.renderUserPosition()}</div> */
+}

@@ -20,7 +20,10 @@ class Lists extends React.Component {
       <div className="flexcontainer" style={{ margin: '50px 0' }}>
         {this.state.lists.map(list => {
           return (
-            <Link to={`/lists/${list.contractAddress}`}>
+            <Link
+              key={list.contractAddress}
+              to={`/lists/${list.contractAddress}`}
+            >
               <div className="list-box">{list.name}</div>
             </Link>
           )

@@ -4,13 +4,6 @@ import { post } from './utils/api'
 const contract = require('truffle-contract')
 import WaitlistContract from '../build/contracts/Waitlist.json'
 
-const styles = {
-  margin: '50px auto',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '400px'
-}
-
 class CreateList extends React.Component {
   state = {
     name: ''
@@ -49,8 +42,9 @@ class CreateList extends React.Component {
 
   render() {
     return (
-      <div style={styles}>
+      <div className="createBox">
         <div>
+          <h3>Create your list</h3>
           <label>List Name</label>
           <input
             value={this.state.name}
@@ -70,7 +64,8 @@ class CreateList extends React.Component {
           />
         </div>
         <p />
-        <Button onClick={this.createList}>Create</Button>
+        <p />
+        <Button onClick={this.createList}>SAVE</Button>
       </div>
     )
   }

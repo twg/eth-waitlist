@@ -25,3 +25,10 @@
        url('../fonts/Oswald-regular/Oswald-regular.ttf') format('truetype'),
        url('../fonts/Oswald-regular/Oswald-regular.svg#Oswald') format('svg');
 }
+
+
+@font-face {
+  font-family: 'PostGrotesk';
+  src: url('../fonts/Post-Grotesk/PostGrotesk-Book.otf');
+  src: url('../fonts/Post-Grotesk/PostGrotesk-Medium.otf');
+}

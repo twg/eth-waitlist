@@ -45,6 +45,8 @@ class App extends Component {
         <nav className="navbar pure-menu pure-menu-horizontal">
           <a href="/">
             <span className="pure-menu-heading pure-menu-link">Lists</span>
+          </a>
+          <a href="/about">
             <span className="pure-menu-heading pure-menu-link">About</span>
           </a>
         </nav>
