@@ -22,7 +22,9 @@ class Lists extends React.Component {
   async componentDidMount() {
     let lists
     try {
-      lists = await get(`/lists?account=${this.context.web3.selectedAccount}`)
+      lists = await get(
+        `/admin/lists?account=${this.context.web3.selectedAccount}`
+      )
     } catch (err) {
       lists = LISTS
     }

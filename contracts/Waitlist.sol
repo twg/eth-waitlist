@@ -1,36 +1,36 @@
 pragma solidity ^0.4.15;
 
 contract Waitlist {
-  address[] public waitingList;
+  address[] public list;
   address public owner;
-  uint current;
+  uint nextInQueue;
 
   function Waitlist() public {
     owner = msg.sender;
-    current = 0;
+    nextInQueue = 0;
   }
 
   // Modifiers
   modifier onlyOwner() { require(msg.sender == owner); _; }
   modifier notOwner() { require(msg.sender != owner); _; }
 
-  function add() notOwner public {
-    waitingList.push(msg.sender);
+  function join() notOwner public {
+    list.push(msg.sender);
   }
 
-  function get() onlyOwner constant public returns(address[]) {
-    return waitingList;
+  function get() constant public returns(address[]) {
+    return list;
   }
 
   function pop() onlyOwner public returns(address) {
-    require(waitingList.length > current);
-    address user = waitingList[current];
-    current++;
+    require(list.length > nextInQueue);
+    address user = list[nextInQueue];
+    nextInQueue++;
     return user;
   }
 
-  function getCurrent () constant public returns(uint) {
-    return current;
+  function getNextInQueue() constant public returns(uint) {
+    return nextInQueue;
   }
 
 }
