@@ -30,13 +30,13 @@ class CreateList extends React.Component {
   createList = () => {
     this.deploy()
       .then(instance => {
-        post('/lists', {
+        post('/admin/lists', {
           contractAddress: instance.address,
           name: this.state.name,
           ownerPublicKey: this.props.accounts[0]
         })
           .then(() => {
-            window.location = '/lists'
+            window.location = '/'
           })
           .catch(err => {
             console.error(err)
