@@ -6,7 +6,6 @@
 	  box-sizing: border-box;
 }
 
-
 a {
   color: #000;
   text-decoration: none;
@@ -19,6 +18,10 @@ a {
 body,
 .pure-g [class*=pure-u] {
   font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  background-color: rgb(184, 227, 227);
 }
 
 h1, h2, h3 {
@@ -55,7 +58,7 @@ code {
 .navbar {
   position: fixed;
   padding: 5px;
-  background: #0c1a2b;
+  background: rgb(250, 250, 250);
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
 }
 
@@ -70,6 +73,7 @@ code {
 }
 
 .navbar .pure-menu-heading {
+  float: right;
   font-weight: bold;
   text-transform: none;
 }
