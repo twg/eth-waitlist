@@ -36,7 +36,21 @@ contract('Waitlist', function(accounts) {
                 assert.equal(nextInQueue, 1, "Current spot should be zero.");
             });
         });
+    });
 
+    describe('should prevent an admin from', function() {
+
+        it('poping if the list is empty', function() {
+            return waitlist.get().then(function(list) {
+                assert.equal(list.length, 0, "The waitlist should be empty.");
+                return waitlist.pop();
+            }).catch(function(error) {
+                assert.include(error.message, "VM Exception while processing transaction");
+                return waitlist.getNextInQueue();
+            }).then(function(nextInQueue) {
+                assert.equal(nextInQueue, 0, "Current spot should be zero.");
+            });
+        });
     })
 
     describe('should allow a user to', function() {
