@@ -4,16 +4,13 @@ import PropTypes from 'prop-types'
 const Metadata = (props, context) => {
   const web3 = context.web3 || {}
   return (
-    <div className='metadata'>
+    <div className="metadata">
       <h2>Metadata</h2>
-      <p>Network: {web3.network} ({web3.networkId})</p>
+      <p>
+        Network: {web3.network} ({web3.networkId})
+      </p>
     </div>
   )
 }
-
-Metadata.contextTypes = {
-  web3: PropTypes.object
-}
-
 
 export default Metadata

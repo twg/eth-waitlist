@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Button } from './components/button'
 import { post } from './utils/api'
 const contract = require('truffle-contract')
@@ -24,9 +23,7 @@ class CreateList extends React.Component {
     })
     this.Waitlist.setProvider(this.props.web3.currentProvider)
     return this.Waitlist.new({
-      from: this.context.web3.selectedAccount,
-      gas: 500000,
-      gasPrice: 1000000000 // 1 wei
+      from: this.props.accounts[0]
     })
   }
 
@@ -36,7 +33,7 @@ class CreateList extends React.Component {
         post('/lists', {
           contractAddress: instance.address,
           name: this.state.name,
-          ownerPublicKey: this.context.web3.selectedAccount
+          ownerPublicKey: this.props.accounts[0]
         })
           .then(() => {
             window.location = '/lists'
@@ -65,17 +62,18 @@ class CreateList extends React.Component {
         <p />
         <div>
           <label>Owner</label>
-          <input className="input" name="listName" value="0xfsldfsf" readOnly />
+          <input
+            className="input"
+            name="listName"
+            value={this.props.accounts[0]}
+            readOnly
+          />
         </div>
         <p />
         <Button onClick={this.createList}>Create</Button>
       </div>
     )
   }
-}
-
-CreateList.contextTypes = {
-  web3: PropTypes.object
 }
 
 export default CreateList

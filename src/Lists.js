@@ -19,16 +19,12 @@ class Lists extends React.Component {
     lists: []
   }
 
-  async componentDidMount() {
-    let lists
-    try {
-      lists = await get(
-        `/admin/lists?account=${this.context.web3.selectedAccount}`
-      )
-    } catch (err) {
-      lists = LISTS
-    }
-    this.setState({ lists })
+  componentDidMount() {
+    get(`/admin/lists?account=${this.props.accounts[0]}`)
+      .then(lists => {
+        this.setState({ lists })
+      })
+      .catch(err => console.log(err))
   }
 
   render() {
@@ -49,10 +45,6 @@ class Lists extends React.Component {
       </div>
     )
   }
-}
-
-Lists.contextTypes = {
-  web3: PropTypes.object
 }
 
 export default Lists
