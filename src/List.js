@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 const contract = require('truffle-contract')
 import WaitlistContract from '../build/contracts/Waitlist.json'
-import PropTypes from 'prop-types'
 
 class List extends Component {
   state = {
@@ -35,11 +34,12 @@ class List extends Component {
   refreshList() {
     this.getInstance()
       .then(instance => {
-        instance.getWaitingList().then(list => {
+        console.log(instance)
+        instance.get().then(list => {
           this.setState(prevState => ({ ...prevState, list }))
         })
 
-        instance.getCurrent().then(current => {
+        instance.getNextInQueue().then(current => {
           this.setState(prevState => ({ ...prevState, current }))
         })
       })
@@ -53,7 +53,7 @@ class List extends Component {
   }
 
   getInstance = () => {
-    if (!this.props.web3.isAddress(this.contractId())) {
+    if (!this.props.web3.utils.isAddress(this.contractId())) {
       // invalid address
       window.location = '/'
     } else {
@@ -63,17 +63,15 @@ class List extends Component {
 
   addMeToList = () => {
     this.getInstance().then(instance => {
-      instance
-        .addToWaitingList({ from: this.context.web3.selectedAccount })
-        .then(res => {
-          this.refreshList()
-        })
+      instance.join({ from: this.props.accounts[0] }).then(res => {
+        this.refreshList()
+      })
     })
   }
 
   userPosition = () => {
     const userIndex = this.state.list.findIndex(
-      address => address === this.context.web3.selectedAccount
+      address => address.toLowerCase() === this.props.accounts[0].toLowerCase()
     )
     if (userIndex !== -1) {
       return userIndex - this.state.current
@@ -86,7 +84,7 @@ class List extends Component {
     if (pos === null) {
       return 'Current user is not on the list.'
     } else {
-      return `You are number ${pos}`
+      return `You are number ${pos + 1} on the list`
     }
   }
 
@@ -96,22 +94,24 @@ class List extends Component {
 
   render() {
     if (this.state.error) {
-      return JSON.stringify(this.state.error)
+      return 'error'
     }
     return (
       <div className="waitlist">
-        <ul>{this.state.list.map((item, index) => <ol>{item}</ol>)}</ul>
-        <div>{this.renderUserPosition()}</div>
-        {!this.userOnList() && (
-          <button onClick={this.addMeToList}>Add me to list</button>
+        {this.Waitlist ? (
+          <div>
+            <ul>{this.state.list.map((item, index) => <li>{item}</li>)}</ul>
+            <div>{this.renderUserPosition()}</div>
+            {!this.userOnList() && (
+              <button onClick={this.addMeToList}>Add me to list</button>
+            )}
+          </div>
+        ) : (
+          'Loading...'
         )}
       </div>
     )
   }
-}
-
-List.contextTypes = {
-  web3: PropTypes.object
 }
 
 export default List
