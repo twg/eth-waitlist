@@ -15,24 +15,40 @@ class Lists extends React.Component {
       .catch(err => console.log(err))
   }
 
+  renderNonEmptyMessage() {
+    return 'The lists you manage are below. Click one to check the list, or create a new one.'
+  }
+
+  renderEmptyMessage() {
+    return "You don't currently manage any lists, click below to create one."
+  }
+
+  renderLists() {
+    return this.state.lists.map(list => {
+      return (
+        <Link key={list.contractAddress} to={`/lists/${list.contractAddress}`}>
+          <div className="list-box">{list.name}</div>
+        </Link>
+      )
+    })
+  }
+
   render() {
     return (
-      <div className="flexcontainer" style={{ margin: '50px 0' }}>
-        {this.state.lists.map(list => {
-          return (
-            <Link
-              key={list.contractAddress}
-              to={`/lists/${list.contractAddress}`}
-            >
-              <div className="list-box">{list.name}</div>
-            </Link>
-          )
-        })}
-        <Link to="/lists/new">
-          <div className="add-box">
-            <div className="circle">+</div>
-          </div>
-        </Link>
+      <div>
+        <p style={{ textAlign: 'center' }}>
+          {this.state.lists.length === 0
+            ? this.renderEmptyMessage()
+            : this.renderNonEmptyMessage()}
+        </p>
+        <div className="flexcontainer" style={{ margin: '50px 0' }}>
+          {this.renderLists()}
+          <Link to="/lists/new">
+            <div className="add-box">
+              <div className="circle">+</div>
+            </div>
+          </Link>
+        </div>
       </div>
     )
   }

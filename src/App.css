@@ -193,11 +193,12 @@ code {
   border-width: 0px;
   transition: 0.2s all;
   margin-bottom: 24px;
-  height: 35px;
-  width: 200px;
+  min-height: 35px;
+  min-width: 200px;
   margin: 0px auto;
   background-color: #5a9e9f;
   border-radius: 20px;
+  padding: 10px;
 }
 
 .button:hover {
@@ -254,4 +255,8 @@ h3 {
 
 .highlight {
   background-color: pink;
+}
+
+.underline {
+  text-decoration: underline;
 }

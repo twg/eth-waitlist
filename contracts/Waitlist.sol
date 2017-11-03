@@ -13,8 +13,13 @@ contract Waitlist {
   }
 
   // Modifiers
-  modifier onlyOwner() { require(msg.sender == owner); _; }
-  modifier notOwner() { require(msg.sender != owner); _; }
+  modifier onlyOwner() {
+    require(msg.sender == owner); _;
+  }
+
+  modifier notOwner() {
+    require(msg.sender != owner); _;
+  }
 
   function join() notOwner public {
     list.push(msg.sender);
